@@ -6,7 +6,11 @@ pipeline {
     stages {
         stage('Test') {
             steps {
-                sh 'npm run test'
+                sh '''
+                cd /usr/src/app
+                npm run test
+
+                '''
             }
         }
     }
