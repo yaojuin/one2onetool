@@ -1,10 +1,11 @@
 pipeline {
-    agent {
+    agent none
+    stages {
+        stage('Test') {
+            agent {
         dockerfile { args '--entrypoint=""' additionalBuildArgs '--target test'
         }
     }
-    stages {
-        stage('Test') {
             steps {
                 sh '''
                 cd /usr/src/app
