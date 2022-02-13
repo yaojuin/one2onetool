@@ -7,7 +7,6 @@ COPY package.json /usr/src/app/
 FROM base as test
 RUN npm install
 COPY . /usr/src/app/
-CMD [ "npm", "run", "test" ]
 
 FROM base as prod
 RUN npm install --production
