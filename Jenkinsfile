@@ -1,12 +1,12 @@
 pipeline {
     agent {
-        dockerfile { args '--entrypoint=""'
+        dockerfile { args '--entrypoint=""', args '--target test'
         }
     }
     stages {
         stage('Test') {
             steps {
-                sh 'npm run test'
+                sh 'echo test'
             }
         }
     }
