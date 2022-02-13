@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        dockerfile { args '--entrypoint=""' args '--target test'
+        dockerfile { args '--entrypoint=""' additionalBuildArgs '--target test'
         }
     }
     stages {
