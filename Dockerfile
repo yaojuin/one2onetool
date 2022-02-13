@@ -1,7 +1,9 @@
 FROM node:latest
 
+RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
-
-COPY . .
+COPY package.json /usr/src/app/
 RUN npm install
-RUN npm run test
+COPY . /usr/src/app/
+EXPOSE 3000
+ENTRYPOINT npm start
