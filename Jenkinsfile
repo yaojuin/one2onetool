@@ -45,17 +45,17 @@ pipeline {
         FAMILY=one2onetool-staging
         SERVICE_NAME=one2onetool-staging
 
-        aws ecs describe-task-definition --profile jenkins --task-definition \${FAMILY} --no-verify-ssl --region \${REGION} \| jq .taskDefinition \| jq 'del(.taskDefinitionArn)' \| jq 'del(.status)' \| jq 'del(.revision)' \| jq 'del(.requiresAttributes)' \| jq 'del(.compatibilities)' > task.json
+        aws ecs describe-task-definition --profile jenkins --task-definition \${FAMILY} --no-verify-ssl --region \${REGION} | jq .taskDefinition | jq 'del(.taskDefinitionArn)' | jq 'del(.status)' | jq 'del(.revision)' | jq 'del(.requiresAttributes)' | jq 'del(.compatibilities)' | jq 'del(.registeredAt)' | jq 'del(.registeredBy)' > task.json
         sed -i -e "s/staging_[0-9]\\+/\\staging_$BUILD_ID/g" task.json
 
         #Create new revision
-        REVISION=`aws ecs register-task-definition --profile jenkins --no-verify-ssl --family \${FAMILY} --cli-input-json file://$WORKSPACE/task.json --region \${REGION} \| jq .taskDefinition.revision`
-        SERVICES=`aws ecs describe-services --profile jenkins --no-verify-ssl --services \${SERVICE_NAME} --cluster \${CLUSTER} --region \${REGION} \| jq .failures[]`
+        REVISION=`aws ecs register-task-definition --profile jenkins --no-verify-ssl --family \${FAMILY} --cli-input-json file://$WORKSPACE/task.json --region \${REGION} | jq .taskDefinition.revision`
+        SERVICES=`aws ecs describe-services --profile jenkins --no-verify-ssl --services \${SERVICE_NAME} --cluster \${CLUSTER} --region \${REGION} | jq .failures[]`
         
         #Create or update service
         if [ "\$SERVICES" == "" ]; then
           echo "entered existing service"
-          DESIRED_COUNT=`aws ecs describe-services --profile jenkins --no-verify-ssl --services \${SERVICE_NAME} --cluster \${CLUSTER} --region \${REGION} \| jq .services[].desiredCount`
+          DESIRED_COUNT=`aws ecs describe-services --profile jenkins --no-verify-ssl --services \${SERVICE_NAME} --cluster \${CLUSTER} --region \${REGION} | jq .services[].desiredCount`
           if [ \$DESIRED_COUNT = "0" ]; then
             DESIRED_COUNT="1"
           fi
