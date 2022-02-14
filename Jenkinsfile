@@ -30,7 +30,7 @@ pipeline {
             --region us-east-1 \
             | docker login \
                 --username AWS \
-                --password-stdin 176499060410.dkr.ecr.us-east-1.amazonaws.com 
+                -p \$(aws ecr-public get-login-password --region us-east-1) 176499060410.dkr.ecr.us-east-1.amazonaws.com 
         docker build -t public.ecr.aws/t5z2m9x9/one2onetool:staging_${BUILD_ID} .
         docker push public.ecr.aws/t5z2m9x9/one2onetool:staging_${BUILD_ID}
         docker rmi public.ecr.aws/t5z2m9x9/one2onetool:staging_${BUILD_ID}
