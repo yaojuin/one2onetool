@@ -62,7 +62,8 @@ pipeline {
           aws ecs update-service --profile jenkins --no-verify-ssl --cluster \${CLUSTER} --region \${REGION} --service \${SERVICE_NAME} --task-definition \${FAMILY}:\$REVISION --desired-count \$DESIRED_COUNT --force-new-deployment
         else
           echo "entered new service"
-          aws ecs create-service --profile jenkins --no-verify-ssl --service-name \${SERVICE_NAME} --desired-count 1 --task-definition \${FAMILY} --cluster \${CLUSTER} --region \${REGION}
+          aws ecs update-service --profile jenkins --no-verify-ssl --cluster \${CLUSTER} --region \${REGION} --service \${SERVICE_NAME} --task-definition \${FAMILY}:\$REVISION --desired-count 1 --force-new-deployment
+          #aws ecs create-service --profile jenkins --no-verify-ssl --service-name \${SERVICE_NAME} --desired-count 1 --task-definition \${FAMILY} --cluster \${CLUSTER} --region \${REGION}
         fi
     """
             }
