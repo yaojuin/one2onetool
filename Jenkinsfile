@@ -50,10 +50,10 @@ pipeline {
 
         #Create new revision
         REVISION=`aws ecs register-task-definition --profile jenkins --no-verify-ssl --family \${FAMILY} --cli-input-json file://$WORKSPACE/task.json --region \${REGION} | jq .taskDefinition.revision`
-        SERVICES=`aws ecs describe-services --profile jenkins --no-verify-ssl --services \${SERVICE_NAME} --cluster \${CLUSTER} --region \${REGION} | jq .failures[]`
+        SERVICES=`aws ecs describe-services --profile jenkins --no-verify-ssl --services \${SERVICE_NAME} --cluster \${CLUSTER} --region \${REGION} | jq --raw-output 'select(.services[].status != null ) | .services[].status'`
         
         #Create or update service
-        if [[ "\$SERVICES" == "" ]]; then
+        if [[ "\$SERVICES" == "ACTIVE" ]]; then
           echo "entered existing service"
           DESIRED_COUNT=`aws ecs describe-services --profile jenkins --no-verify-ssl --services \${SERVICE_NAME} --cluster \${CLUSTER} --region \${REGION} | jq .services[].desiredCount`
           if [ \$DESIRED_COUNT = "0" ]; then
