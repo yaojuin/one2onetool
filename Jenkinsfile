@@ -53,7 +53,7 @@ pipeline {
         SERVICES=`aws ecs describe-services --profile jenkins --no-verify-ssl --services \${SERVICE_NAME} --cluster \${CLUSTER} --region \${REGION} | jq .failures[]`
         
         #Create or update service
-        if [ "\$SERVICES" == "" ]; then
+        if [[ "\$SERVICES" == "" ]]; then
           echo "entered existing service"
           DESIRED_COUNT=`aws ecs describe-services --profile jenkins --no-verify-ssl --services \${SERVICE_NAME} --cluster \${CLUSTER} --region \${REGION} | jq .services[].desiredCount`
           if [ \$DESIRED_COUNT = "0" ]; then
