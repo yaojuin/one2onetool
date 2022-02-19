@@ -51,20 +51,10 @@ pipeline {
         #Create new revision
         REVISION=`aws ecs register-task-definition --profile jenkins --no-verify-ssl --family \${FAMILY} --cli-input-json file://$WORKSPACE/task.json --region \${REGION} | jq .taskDefinition.revision`
         SERVICES=`aws ecs describe-services --profile jenkins --no-verify-ssl --services \${SERVICE_NAME} --cluster \${CLUSTER} --region \${REGION} | jq --raw-output 'select(.services[].status != null ) | .services[].status'`
+    
+        aws ecs update-service --profile jenkins --no-verify-ssl --cluster \${CLUSTER} --region \${REGION} --service \${SERVICE_NAME} --task-definition \${FAMILY}:\$REVISION --desired-count 1 --force-new-deployment
         
-        #Create or update service
-        if [ \$SERVICES == "ACTIVE" ]; then
-          echo "entered existing service"
-          DESIRED_COUNT=`aws ecs describe-services --profile jenkins --no-verify-ssl --services \${SERVICE_NAME} --cluster \${CLUSTER} --region \${REGION} | jq .services[].desiredCount`
-          if [ \$DESIRED_COUNT = "0" ]; then
-            DESIRED_COUNT="1"
-          fi
-          aws ecs update-service --profile jenkins --no-verify-ssl --cluster \${CLUSTER} --region \${REGION} --service \${SERVICE_NAME} --task-definition \${FAMILY}:\$REVISION --desired-count \$DESIRED_COUNT --force-new-deployment
-        else
-          echo "entered new service"
-          aws ecs update-service --profile jenkins --no-verify-ssl --cluster \${CLUSTER} --region \${REGION} --service \${SERVICE_NAME} --task-definition \${FAMILY}:\$REVISION --desired-count 1 --force-new-deployment
-          #aws ecs create-service --profile jenkins --no-verify-ssl --service-name \${SERVICE_NAME} --desired-count 1 --task-definition \${FAMILY} --cluster \${CLUSTER} --region \${REGION}
-        fi
+        
     """
             }
         }
@@ -101,17 +91,9 @@ pipeline {
         SERVICES=`aws ecs describe-services --profile jenkins --no-verify-ssl --services \${SERVICE_NAME} --cluster \${CLUSTER} --region \${REGION} | jq .failures[]`
         
         #Create or update service
-        if [ "\$SERVICES" == "" ]; then
-          echo "entered existing service"
-          DESIRED_COUNT=`aws ecs describe-services --profile jenkins --no-verify-ssl --services \${SERVICE_NAME} --cluster \${CLUSTER} --region \${REGION} | jq .services[].desiredCount`
-          if [ \$DESIRED_COUNT = "0" ]; then
-            DESIRED_COUNT="1"
-          fi
-          aws ecs update-service --profile jenkins --no-verify-ssl --cluster \${CLUSTER} --region \${REGION} --service \${SERVICE_NAME} --task-definition \${FAMILY}:\$REVISION --desired-count \$DESIRED_COUNT --force-new-deployment
-        else
-          echo "entered new service"
-          aws ecs create-service --profile jenkins --no-verify-ssl --service-name \${SERVICE_NAME} --desired-count 1 --task-definition \${FAMILY} --cluster \${CLUSTER} --region \${REGION}
-        fi
+        aws ecs update-service --profile jenkins --no-verify-ssl --cluster \${CLUSTER} --region \${REGION} --service \${SERVICE_NAME} --task-definition \${FAMILY}:\$REVISION --desired-count 1 --force-new-deployment
+        
+        
     """
             }
         }
