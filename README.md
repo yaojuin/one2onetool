@@ -28,7 +28,7 @@ The CICD pipeline is ran on Jenkins master in Windows Docker Desktop for simplic
 
 ## Possible Improvements
 
-- Before building docker image step, scanning code for sensitive information and static code analysis can be implemented to improve on code quality.\
+- Before building docker image step, scanning code for sensitive information and static code analysis can be implemented to improve on code quality.
 - Jenkins Shared Library can be used to further modularise the pipeline steps to make them reusable.
 - Depending on workflow, approval step can be injected before deploying the release branch to ensure some form of release control.
 - A better choice for Email SMTP would be to use AWS SES.
