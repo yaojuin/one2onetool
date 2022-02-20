@@ -1,7 +1,8 @@
 # one2onetool
 
 ## Jenkins Setup
-The CICD pipeline is ran on Jenkins master in Docker Desktop for simplicity. Ideally, build agents should be used in a production grade Jenkins instance. This particular pipeline will deploy to AWS ECS.
+
+The CICD pipeline is ran on Jenkins master in Windows Docker Desktop for simplicity. Ideally, build agents should be used in a production grade Jenkins instance. This particular pipeline will deploy to AWS ECS.
 
 - Build custom jenkins image using the Dockerfile provided
 ` docker build -f ./Dockerfile_jenkins -t <tagName> . `
