@@ -10,7 +10,7 @@ The CICD pipeline is ran on Jenkins master in Windows Docker Desktop for simplic
 ` docker run -d -v "/d/jenkins":/var/jenkins_home -v //var/run/docker.sock:/var/run/docker.sock -v "/c/Users/Yao Juin/.aws":/$HOME/.aws -p 8080:8080 -p 50000:50000 <image_id>`
 - Alternatively, you can mount using the UI from Docker Desktop 
     - D:\jenkins ---> /var/jenkins_home
-    - C:\Users\Yao Juin\.aws ---> /var/jenkins_home/.aws
+    - C:\Users\<username>\<aws credential folder> ---> /var/jenkins_home/.aws (Use IAM role if Jenkins is hosted in AWS)
     - //var/run/docker.sock ---> /var/run/docker.sock
  
 - Access Jenkins through localhost:8080 on your web browser and setup Jenkins with initial admin credentials. Initial password can be found in the container logs.
