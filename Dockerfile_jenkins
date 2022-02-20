@@ -1,0 +1,10 @@
+FROM jenkins/jenkins:lts-jdk11
+
+USER root
+RUN curl -fsSL https://get.docker.com/ | sh
+RUN usermod -aG root jenkins
+RUN apt-get update
+RUN apt install python3-pip -y
+RUN pip3 install awscli --upgrade
+RUN apt-get update && apt-get install jq -y
+USER jenkins
